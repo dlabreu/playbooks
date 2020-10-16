@@ -1,0 +1,39 @@
+---
+ - hosts: 127.0.0.1
+   connection: local
+   gather_facts: no
+
+   tasks:
+      - name: Sec
+        ec2_group:
+         name: OPEN_ALL
+         description: All ports open to the internet.
+         region: "{{ item.sg_region }}"
+#         vpc_id: "{{ item.sg_vpc_id | default(none) }}"
+         rules:
+           - proto: all
+             from_port: 0
+             to_port: 65535
+             cidr_ip: 0.0.0.0/0
+         rules_egress:
+           - proto: all
+             from_port: 0
+             to_port: 65535
+             cidr_ip: 0.0.0.0/0
+        with_items:
+            - { sg_region: 'ap-south-1', sg_vpc_id: 'vpc-8fd07fe6' }
+            - { sg_region: 'us-east-2', sg_vpc_id: 'vpc-b12fefd8' }
+            - { sg_region: 'ca-central-1', sg_vpc_id: 'vpc-11cd2078' }
+            - { sg_region: 'eu-west-2', sg_vpc_id: 'vpc-8c48a8e5' }
+            - { sg_region: 'eu-west-1', sg_vpc_id: 'vpc-21f4b745' }
+            - { sg_region: 'eu-central-1', sg_vpc_id: 'vpc-45af6f2d' }
+            - { sg_region: 'sa-east-1', sg_vpc_id: 'vpc-3443e050' }
+            - { sg_region: 'us-east-1', sg_vpc_id: 'vpc-c09a52a6' }
+            - { sg_region: 'ap-northeast-2', sg_vpc_id: 'vpc-e0542389' }
+            - { sg_region: 'ap-northeast-1', sg_vpc_id: 'vpc-dba677bf' }
+            - { sg_region: 'us-west-2', sg_vpc_id: 'vpc-24fa2c43' }
+            - { sg_region: 'us-west-1', sg_vpc_id: 'vpc-bcc732d8' }
+            - { sg_region: 'ap-southeast-1', sg_vpc_id: 'vpc-c455f2a0' }
+            - { sg_region: 'ap-southeast-2', sg_vpc_id: 'vpc-ab7d86cf' }
+#            - { sg_region: 'eu-central-1'}
+

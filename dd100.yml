@@ -1,0 +1,22 @@
+---
+- name: Run DD like a boss!
+  hosts: case
+  become: yes
+  tasks:
+
+    - name: Create admin folder
+      file:
+        path: /admin
+        state: directory
+    
+    - name: copy script over
+      copy:
+        src: templates/script100.sh
+        dest: /admin
+        mode: 0777
+    
+    - name: fire up!
+      shell: "/admin/script100.sh > /dev/null 2>&1 &"
+      async: 10
+      poll: 10
+        

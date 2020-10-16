@@ -1,0 +1,50 @@
+---
+ - hosts: 127.0.0.1
+   connection: local
+   gather_facts: no
+   tasks:
+      - name: Create an EC2 key
+        ec2_key:
+         name: "id_rsa"
+         key_material: "{{ lookup('file', '/Users/abred/.ssh/id_rsa.pub') }}" 
+         region: "{{ item }}"
+        register: ec2_key
+        with_items:
+           - us-east-1
+           - us-east-2
+           - us-west-1
+           - us-west-2
+           - ca-central-1
+           - ap-south-1
+           - ap-northeast-2
+           - ap-southeast-1
+           - ap-southeast-2
+           - ap-northeast-1
+           - eu-central-1
+           - eu-west-1
+           - eu-west-2
+           - sa-east-1
+
+
+      - name: remove key pair by name
+        ec2_key:
+          name: "*"
+          state: absent
+          region: "{{ item }}"
+        with_items:
+           - us-east-1
+           - us-east-2
+           - us-west-1
+           - us-west-2
+           - ca-central-1
+           - ap-south-1
+           - ap-northeast-2
+           - ap-southeast-1
+           - ap-southeast-2
+           - ap-northeast-1
+           - eu-central-1
+           - eu-west-1
+           - eu-west-2
+           - sa-east-1
+
+
