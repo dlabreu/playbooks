@@ -1,0 +1,8 @@
+---
+- name: Clean DNF Cache
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Clean DNF cache
+      command: dnf clean all
