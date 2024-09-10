@@ -1,0 +1,53 @@
+---
+- name: Install oc and virtctl clients on Fedora nodes
+  hosts: fedora_nodes
+  become: yes
+  tasks:
+    - name: Install required dependencies
+      dnf:
+        name:
+          - wget
+          - curl
+        state: present
+
+    - name: Download and install oc client
+      get_url:
+        url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
+        dest: /tmp/openshift-client-linux.tar.gz
+
+    - name: Extract oc client
+      unarchive:
+        src: /tmp/openshift-client-linux.tar.gz
+        dest: /usr/local/bin/
+        remote_src: yes
+
+    - name: Ensure oc binary is executable
+      file:
+        path: /usr/local/bin/oc
+        mode: '0755'
+
+    - name: Download and install virtctl client
+      get_url:
+        url: https://github.com/kubevirt/kubevirt/releases/download/v0.60.0/virtctl-v0.60.0-linux-amd64.tar.gz
+        dest: /tmp/virtctl-linux-amd64.tar.gz
+
+    - name: Extract virtctl client
+      unarchive:
+        src: /tmp/virtctl-linux-amd64.tar.gz
+        dest: /usr/local/bin/
+        remote_src: yes
+
+    - name: Ensure virtctl binary is executable
+      file:
+        path: /usr/local/bin/virtctl
+        mode: '0755'
+
+    - name: Clean up temporary files
+      file:
+        path: /tmp/openshift-client-linux.tar.gz
+        state: absent
+
+    - name: Clean up temporary files
+      file:
+        path: /tmp/virtctl-linux-amd64.tar.gz
+        state: absent
