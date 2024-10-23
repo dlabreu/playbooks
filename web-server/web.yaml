@@ -1,0 +1,35 @@
+---
+- name: Set up Apache Webserver
+  hosts: all
+  remote_user: ec2-user
+  become: true
+  vars:
+    project_root: /var/www/html
+    index_file: index.html
+
+  tasks:
+    - name: Install Apache Webserver
+      ansible.builtin.yum:
+        name: httpd
+        state: latest
+
+    - name: Place the index file at project root
+      ansible.builtin.copy:
+        src: "{{ index_file }}"
+        dest: "{{ project_root }}/{{ index_file }}"
+        owner: apache
+        group: apache
+        mode: '0644'
+
+    - name: Ensure Apache is enabled and started
+      ansible.builtin.service:
+        name: httpd
+        enabled: yes
+        state: started
+      notify: Restart Apache
+
+  handlers:
+    - name: Restart Apache
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
